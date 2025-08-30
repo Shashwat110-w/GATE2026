@@ -144,6 +144,7 @@
                     await signInAnonymously(auth);
                 }
 
+                // This is the key part that waits for the user ID.
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
                         userId = user.uid;
@@ -178,12 +179,16 @@
                     } catch (e) {
                         console.error("Error parsing tracker data:", e);
                     }
+                    renderTrackerList();
+                    updateSummary();
                 } else {
                     console.log("No existing data found, initializing with default data.");
                     initializeDefaultData();
+                    // NOTE: We don't call renderTrackerList() here.
+                    // The onSnapshot listener will be triggered again once initializeDefaultData()
+                    // has successfully written the data to Firestore.
+                    // This prevents the "No data found" message from showing.
                 }
-                renderTrackerList();
-                updateSummary();
             }, (error) => {
                 console.error("Error listening to Firestore document:", error);
                 isLoading = false;
@@ -652,4 +657,5 @@
     </div>
 </body>
 </html>
+
 
