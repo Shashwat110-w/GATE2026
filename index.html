@@ -33,95 +33,103 @@
         let db;
         let isLoading = true;
 
-        // The hardcoded syllabus data has been removed from this file.
-        // It will now be loaded from Firestore. This keeps the file size small.
         const defaultSyllabusData = [
-            { id: 1, type: 'subject', name: 'General Aptitude', children: [2, 6, 10, 14] },
-            { id: 2, type: 'topic', name: 'Verbal Ability', parent: 1, children: [3, 4, 5] },
-            { id: 3, type: 'subtopic', parent: 2, name: 'English Grammar', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 4, type: 'subtopic', parent: 2, name: 'Reading Comprehension', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 5, type: 'subtopic', parent: 2, name: 'Sentence Completion', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 1, type: 'subject', name: 'General Aptitude', children: [2, 6, 10, 14, 18] },
+            { id: 2, type: 'topic', name: 'Verbal Aptitude', parent: 1, children: [3, 4, 5] },
+            { id: 3, type: 'subtopic', parent: 2, name: 'Grammar and Vocabulary', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 4, type: 'subtopic', parent: 2, name: 'Reading and Comprehension', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 5, type: 'subtopic', parent: 2, name: 'Narrative Sequencing', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
             { id: 6, type: 'topic', name: 'Quantitative Aptitude', parent: 1, children: [7, 8, 9] },
-            { id: 7, type: 'subtopic', parent: 6, name: 'Data Interpretation', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 8, type: 'subtopic', parent: 6, name: 'Numerical Computation', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 9, type: 'subtopic', parent: 6, name: 'Ratio & Proportion', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 7, type: 'subtopic', parent: 6, name: 'Data Interpretation and Analysis', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 8, type: 'subtopic', parent: 6, name: 'Mensuration, Geometry, Trigonometry', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 9, type: 'subtopic', parent: 6, name: 'Probability, Permutations & Combinations', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
             { id: 10, type: 'topic', name: 'Analytical Aptitude', parent: 1, children: [11, 12, 13] },
-            { id: 11, type: 'subtopic', parent: 10, name: 'Logical Reasoning', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 12, type: 'subtopic', parent: 10, name: 'Seating Arrangements', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 13, type: 'subtopic', parent: 10, name: 'Puzzles', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 11, type: 'subtopic', parent: 10, name: 'Logic and Deduction', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 12, type: 'subtopic', parent: 10, name: 'Induction and Analogy', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 13, type: 'subtopic', parent: 10, name: 'Coding & Decoding', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
             { id: 14, type: 'topic', name: 'Spatial Aptitude', parent: 1, children: [15, 16, 17] },
-            { id: 15, type: 'subtopic', parent: 14, name: 'Paper Folding', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 16, type: 'subtopic', parent: 14, name: 'Mirror Images', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 17, type: 'subtopic', parent: 14, name: 'Visual Comparison', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 18, type: 'subject', name: 'Engineering Mathematics', children: [19, 22, 26] },
-            { id: 19, type: 'topic', name: 'Linear Algebra', parent: 18, children: [20, 21] },
-            { id: 20, type: 'subtopic', parent: 19, name: 'Vector Spaces', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 21, type: 'subtopic', parent: 19, name: 'Eigenvalues & Eigenvectors', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 22, type: 'topic', name: 'Calculus', parent: 18, children: [23, 24, 25] },
-            { id: 23, type: 'subtopic', parent: 22, name: 'Limits, Continuity & Differentiability', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 24, type: 'subtopic', parent: 22, name: 'Integration', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 25, type: 'subtopic', parent: 22, name: 'Differential Equations', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 26, type: 'topic', name: 'Probability & Statistics', parent: 18, children: [27, 28, 29] },
-            { id: 27, type: 'subtopic', parent: 26, name: 'Probability & Random Variables', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 28, type: 'subtopic', parent: 26, name: 'Distributions', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 29, type: 'subtopic', parent: 26, name: 'Covariance & Correlation', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 30, type: 'subject', name: 'Computer Science (CSE)', children: [31, 35, 39, 43, 47, 51, 55, 59, 63] },
-            { id: 31, type: 'topic', name: 'Discrete Mathematics', parent: 30, children: [32, 33, 34] },
-            { id: 32, type: 'subtopic', parent: 31, name: 'Set Theory & Logic', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 33, type: 'subtopic', parent: 31, name: 'Graph Theory', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 34, type: 'subtopic', parent: 31, name: 'Combinatorics & Recurrence Relations', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 35, type: 'topic', name: 'Data Structures', parent: 30, children: [36, 37, 38] },
-            { id: 36, type: 'subtopic', parent: 35, name: 'Arrays, Linked Lists, Stacks, Queues', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 37, type: 'subtopic', parent: 35, name: 'Trees, Heaps & Hashing', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 38, type: 'subtopic', parent: 35, name: 'Graphs', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 39, type: 'topic', name: 'Algorithms', parent: 30, children: [40, 41, 42] },
-            { id: 40, type: 'subtopic', parent: 39, name: 'Sorting & Searching', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 41, type: 'subtopic', parent: 39, name: 'Asymptotic Analysis', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 42, type: 'subtopic', parent: 39, name: 'Dynamic Programming & Greedy', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 43, type: 'topic', name: 'Computer Organization & Architecture', parent: 30, children: [44, 45, 46] },
-            { id: 44, type: 'subtopic', parent: 43, name: 'Pipelining', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 45, type: 'subtopic', parent: 43, name: 'I/O Interfacing', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 46, type: 'subtopic', parent: 43, name: 'Memory Hierarchy', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 47, type: 'topic', name: 'Operating Systems', parent: 30, children: [48, 49, 50] },
-            { id: 48, type: 'subtopic', parent: 47, name: 'Processes & Threads', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 49, type: 'subtopic', parent: 47, name: 'CPU Scheduling', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 50, type: 'subtopic', parent: 47, name: 'Memory Management', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 51, type: 'topic', name: 'Databases', parent: 30, children: [52, 53, 54] },
-            { id: 52, type: 'subtopic', parent: 51, name: 'ER & Relational Model', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 53, type: 'subtopic', parent: 51, name: 'SQL & Normalization', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 54, type: 'subtopic', parent: 51, name: 'Transactions & Concurrency Control', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 55, type: 'topic', name: 'Computer Networks', parent: 30, children: [56, 57, 58] },
-            { id: 56, type: 'subtopic', parent: 55, name: 'TCP/IP Protocol Stack', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 57, type: 'subtopic', parent: 55, name: 'Routing Protocols', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 58, type: 'subtopic', parent: 55, name: 'Security', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 59, type: 'topic', name: 'Theory of Computation', parent: 30, children: [60, 61, 62] },
-            { id: 60, type: 'subtopic', parent: 59, name: 'Finite Automata & Regular Languages', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 61, type: 'subtopic', parent: 59, name: 'Pushdown Automata & Context-Free Languages', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 62, type: 'subtopic', parent: 59, name: 'Turing Machines & Undecidability', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 63, type: 'topic', name: 'Compiler Design', parent: 30, children: [64, 65, 66] },
-            { id: 64, type: 'subtopic', parent: 63, name: 'Lexical Analysis & Parsing', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 65, type: 'subtopic', parent: 63, name: 'Syntax Directed Translation', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 66, type: 'subtopic', parent: 63, name: 'Code Generation & Optimization', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 67, type: 'subject', name: 'Data Science & AI (DA)', children: [68, 72, 76, 80, 84] },
-            { id: 68, type: 'topic', name: 'Statistics, Probability & Linear Algebra', parent: 67, children: [69, 70, 71] },
-            { id: 69, type: 'subtopic', parent: 68, name: 'Descriptive Statistics', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 70, type: 'subtopic', parent: 68, name: 'Probability Distributions', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 71, type: 'subtopic', parent: 68, name: 'Vector Spaces & Matrix Algebra', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 72, type: 'topic', name: 'Machine Learning', parent: 67, children: [73, 74, 75] },
-            { id: 73, type: 'subtopic', parent: 72, name: 'Supervised & Unsupervised Learning', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 74, type: 'subtopic', parent: 72, name: 'Regression & Classification', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 75, type: 'subtopic', parent: 72, name: 'Overfitting & Underfitting', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 76, type: 'topic', name: 'Database Management & Warehousing', parent: 67, children: [77, 78, 79] },
-            { id: 77, type: 'subtopic', parent: 76, name: 'SQL Queries', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 78, type: 'subtopic', parent: 76, name: 'Data Warehousing Concepts', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 79, type: 'subtopic', parent: 76, name: 'ETL', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 80, type: 'topic', name: 'AI, NLP & ML (Advanced Topics)', parent: 67, children: [81, 82, 83] },
-            { id: 81, type: 'subtopic', parent: 80, name: 'Neural Networks', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 82, type: 'subtopic', parent: 80, name: 'Deep Learning & Reinforcement Learning', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 83, type: 'subtopic', parent: 80, name: 'Natural Language Processing', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 84, type: 'topic', name: 'Data Structures & Algorithms (Advanced)', parent: 67, children: [85, 86] },
-            { id: 85, type: 'subtopic', parent: 84, name: 'Advanced Sorting & Graph Algorithms', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
-            { id: 86, type: 'subtopic', parent: 84, name: 'Search Algorithms', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 15, type: 'subtopic', parent: 14, name: 'Paper folding, Cutting, and 3D diagrams', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 16, type: 'subtopic', parent: 14, name: 'Visualizing solid objects', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 17, type: 'subtopic', parent: 14, name: 'Grouping of images', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 18, type: 'topic', name: 'Engineering Mathematics', parent: 1, children: [19, 23, 27, 31] },
+            { id: 19, type: 'topic', name: 'Discrete Mathematics', parent: 18, children: [20, 21, 22] },
+            { id: 20, type: 'subtopic', parent: 19, name: 'Logic, Set Theory & Relations', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 21, type: 'subtopic', parent: 19, name: 'Combinatorics', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 22, type: 'subtopic', parent: 19, name: 'Graph Theory', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 23, type: 'topic', name: 'Linear Algebra', parent: 18, children: [24, 25, 26] },
+            { id: 24, type: 'subtopic', parent: 23, name: 'Matrices, Determinants & Vector spaces', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 25, type: 'subtopic', parent: 23, name: 'Eigenvalues & Eigenvectors', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 26, type: 'subtopic', parent: 23, name: 'Systems of linear equations', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 27, type: 'topic', name: 'Calculus', parent: 18, children: [28, 29, 30] },
+            { id: 28, type: 'subtopic', parent: 27, name: 'Limits, Continuity & Differentiability', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 29, type: 'subtopic', parent: 27, name: 'Integral Calculus', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 30, type: 'subtopic', parent: 27, name: 'Differential Equations', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 31, type: 'topic', name: 'Probability & Statistics', parent: 18, children: [32, 33, 34] },
+            { id: 32, type: 'subtopic', parent: 31, name: 'Probability & Random Variables', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 33, type: 'subtopic', parent: 31, name: 'Distributions', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 34, type: 'subtopic', parent: 31, name: 'Covariance & Correlation', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 35, type: 'subject', name: 'Computer Science and Information Technology (CS)', children: [36, 40, 44, 48, 52, 56, 60, 64, 68] },
+            { id: 36, type: 'topic', name: 'Digital Logic', parent: 35, children: [37, 38, 39] },
+            { id: 37, type: 'subtopic', parent: 36, name: 'Boolean algebra', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 38, type: 'subtopic', parent: 36, name: 'Combinational circuits', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 39, type: 'subtopic', parent: 36, name: 'Sequential circuits', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 40, type: 'topic', name: 'Computer Organization & Architecture', parent: 35, children: [41, 42, 43] },
+            { id: 41, type: 'subtopic', parent: 40, name: 'Machine instructions & Addressing modes', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 42, type: 'subtopic', parent: 40, name: 'CPU control, I/O Interfacing & Pipelining', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 43, type: 'subtopic', parent: 40, name: 'Memory hierarchy', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 44, type: 'topic', name: 'Programming & Data Structures', parent: 35, children: [45, 46, 47] },
+            { id: 45, type: 'subtopic', parent: 44, name: 'Recursion, Stacks, Queues, Linked Lists', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 46, type: 'subtopic', parent: 44, name: 'Trees, Heaps, Binary Search Trees', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 47, type: 'subtopic', parent: 44, name: 'Graphs', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 48, type: 'topic', name: 'Algorithms', parent: 35, children: [49, 50, 51] },
+            { id: 49, type: 'subtopic', parent: 48, name: 'Asymptotic analysis, Sorting & Searching', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 50, type: 'subtopic', parent: 48, name: 'Algorithm design techniques', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 51, type: 'subtopic', parent: 48, name: 'Graph algorithms', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 52, type: 'topic', name: 'Theory of Computation', parent: 35, children: [53, 54, 55] },
+            { id: 53, type: 'subtopic', parent: 52, name: 'Regular expressions, Finite automata', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 54, type: 'subtopic', parent: 52, name: 'Context-Free Languages, Pushdown automata', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 55, type: 'subtopic', parent: 52, name: 'Turing machines, Undecidability', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 56, type: 'topic', name: 'Compiler Design', parent: 35, children: [57, 58, 59] },
+            { id: 57, type: 'subtopic', parent: 56, name: 'Lexical analysis & Parsing', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 58, type: 'subtopic', parent: 56, name: 'Syntax Directed Translation', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 59, type: 'subtopic', parent: 56, name: 'Code Generation & Optimization', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 60, type: 'topic', name: 'Operating System', parent: 35, children: [61, 62, 63] },
+            { id: 61, type: 'subtopic', parent: 60, name: 'Processes, Threads, Scheduling', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 62, type: 'subtopic', parent: 60, name: 'Memory management', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 63, type: 'subtopic', parent: 60, name: 'File systems', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 64, type: 'topic', name: 'Databases', parent: 35, children: [65, 66, 67] },
+            { id: 65, type: 'subtopic', parent: 64, name: 'ER model & Relational model', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 66, type: 'subtopic', parent: 64, name: 'SQL & Normalization', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 67, type: 'subtopic', parent: 64, name: 'Transactions & Concurrency Control', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 68, type: 'topic', name: 'Computer Networks', parent: 35, children: [69, 70, 71] },
+            { id: 69, type: 'subtopic', parent: 68, name: 'TCP/IP Protocol Stack', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 70, type: 'subtopic', parent: 68, name: 'Routing protocols', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 71, type: 'subtopic', parent: 68, name: 'Network security', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 72, type: 'subject', name: 'Data Science and Artificial Intelligence (DA)', children: [73, 77, 81, 85, 89, 93] },
+            { id: 73, type: 'topic', name: 'Probability and Statistics', parent: 72, children: [74, 75, 76] },
+            { id: 74, type: 'subtopic', parent: 73, name: 'Descriptive & Inferential Statistics', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 75, type: 'subtopic', parent: 73, name: 'Probability Distributions', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 76, type: 'subtopic', parent: 73, name: 'Sampling, Regression & Correlation', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 77, type: 'topic', name: 'Linear Algebra', parent: 72, children: [78, 79, 80] },
+            { id: 78, type: 'subtopic', parent: 77, name: 'Vectors, Matrices & Determinants', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 79, type: 'subtopic', parent: 77, name: 'Vector spaces & Eigenvalues', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 80, type: 'subtopic', parent: 77, name: 'Linear Transformations', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 81, type: 'topic', name: 'Calculus and Optimization', parent: 72, children: [82, 83, 84] },
+            { id: 82, type: 'subtopic', parent: 81, name: 'Limits, Continuity & Differentiability', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 83, type: 'subtopic', parent: 81, name: 'Integral Calculus', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 84, type: 'subtopic', parent: 81, name: 'Optimization', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 85, type: 'topic', name: 'Programming, Data Structures and Algorithms', parent: 72, children: [86, 87, 88] },
+            { id: 86, type: 'subtopic', parent: 85, name: 'Python, NumPy & Pandas', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 87, type: 'subtopic', parent: 85, name: 'Data structures (Stacks, Queues, Trees)', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 88, type: 'subtopic', parent: 85, name: 'Algorithms (Sorting, Searching)', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 89, type: 'topic', name: 'Database Management & Data Warehousing', parent: 72, children: [90, 91, 92] },
+            { id: 90, type: 'subtopic', parent: 89, name: 'Relational model & SQL queries', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 91, type: 'subtopic', parent: 89, name: 'Normalization & Joins', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 92, type: 'subtopic', parent: 89, name: 'Data warehousing & ETL', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 93, type: 'topic', name: 'Machine Learning', parent: 72, children: [94, 95, 96] },
+            { id: 94, type: 'subtopic', parent: 93, name: 'Supervised & Unsupervised Learning', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 95, type: 'subtopic', parent: 93, name: 'Regression, Classification & Ensemble Methods', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
+            { id: 96, type: 'subtopic', parent: 93, name: 'Overfitting, Cross-validation & Regularization', status: 'Not Started', completionDate: '', revisions: 0, pyqs: '', mocks: '', notes: '', dpp1: '', dpp2: '' },
         ];
 
 
@@ -178,16 +186,15 @@
                         console.log("Tracker data loaded from Firestore.");
                     } catch (e) {
                         console.error("Error parsing tracker data:", e);
+                        trackerData = []; // Reset to empty on parse error
                     }
                     renderTrackerList();
                     updateSummary();
                 } else {
                     console.log("No existing data found, initializing with default data.");
                     initializeDefaultData();
-                    // NOTE: We don't call renderTrackerList() here.
-                    // The onSnapshot listener will be triggered again once initializeDefaultData()
-                    // has successfully written the data to Firestore.
-                    // This prevents the "No data found" message from showing.
+                    // We call renderTrackerList() here so it's not empty while data is written.
+                    renderTrackerList(); 
                 }
             }, (error) => {
                 console.error("Error listening to Firestore document:", error);
@@ -383,7 +390,10 @@
         }
 
         function createSubtopicHTML(subtopic) {
-            const statusColor = statusConfig[subtopic.status].color;
+            // Defensive check to prevent crash if status is missing
+            const statusColor = (subtopic.status && statusConfig[subtopic.status]) ? statusConfig[subtopic.status].color : 'bg-gray-400';
+            const currentStatus = subtopic.status || 'Not Started';
+
             return `
                 <div class="p-4 bg-white rounded-md border border-gray-200 shadow-sm">
                     <div class="flex justify-between items-start">
@@ -392,7 +402,7 @@
                             <span class="font-medium text-gray-800">${subtopic.name}</span>
                         </div>
                         <select data-id="${subtopic.id}" class="status-select text-xs p-1 rounded border-gray-300">
-                            ${Object.keys(statusConfig).map(s => `<option value="${s}" ${subtopic.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+                            ${Object.keys(statusConfig).map(s => `<option value="${s}" ${currentStatus === s ? 'selected' : ''}>${s}</option>`).join('')}
                         </select>
                     </div>
                     <div class="mt-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 text-sm">
@@ -644,9 +654,8 @@
                     <div id="filter-buttons" class="flex flex-wrap gap-2">
                         <button class="filter-btn active bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-medium" data-filter="All">All</button>
                         <button class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium" data-filter="General Aptitude">General Aptitude</button>
-                        <button class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium" data-filter="Engineering Mathematics">Engg. Mathematics</button>
-                        <button class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium" data-filter="Computer Science (CSE)">CSE Core</button>
-                        <button class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium" data-filter="Data Science & AI (DA)">DA & AI</button>
+                        <button class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium" data-filter="Computer Science and Information Technology (CS)">CS & IT</button>
+                        <button class="filter-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium" data-filter="Data Science and Artificial Intelligence (DA)">DA & AI</button>
                     </div>
                 </div>
                 <div id="tracker-list" class="space-y-3">
@@ -657,5 +666,6 @@
     </div>
 </body>
 </html>
+
 
 
